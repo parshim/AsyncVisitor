@@ -41,17 +41,17 @@ namespace AcyclicVisitor
             _container.Dispose();
         }
 
-        [TestMethod]
-        public void TestDrawBox()
-        {
-            Box b = new Box {Side = 5};
+[TestMethod]
+public void TestDrawBox()
+{
+    Box b = new Box {Side = 5};
 
-            IVisitor<Shape> visitor = _container.Resolve<IVisitor<Shape>>("Draw");
+    IVisitor<Shape> visitor = _container.Resolve<IVisitor<Shape>>("Draw");
 
-            b.Accept(visitor);
+    b.Accept(visitor);
             
-            A.CallTo(() => _graphics.DrawBox(5)).MustHaveHappened();
-        }
+    A.CallTo(() => _graphics.DrawBox(5)).MustHaveHappened();
+}
 
         [TestMethod]
         public void TestDrawCanvas()
