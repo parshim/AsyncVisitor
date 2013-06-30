@@ -20,11 +20,11 @@ namespace AcyclicVisitor
             Type typeToBuild = context.BuildKey.Type;
             if (typeToBuild.IsGenericType && typeof (IVisitor<>).MakeGenericType(typeof(T)) == typeToBuild)
             {
-                GenericVisitor genericVisitor = new GenericVisitor(context);
+                AbstractVisitor<T> abstractVisitor = new AbstractVisitor<T>(context);
 
-                context.Existing = genericVisitor;
+                context.Existing = abstractVisitor;
 
-                context.AddResolverOverrides(new DependencyOverride(typeToBuild, genericVisitor));
+                context.AddResolverOverrides(new DependencyOverride(typeToBuild, abstractVisitor));
             }
         }
     }

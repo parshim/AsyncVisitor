@@ -4,16 +4,16 @@ using Microsoft.Practices.ObjectBuilder2;
 
 namespace AcyclicVisitor
 {
-    class GenericVisitor : IVisitor<Shape>
+    class AbstractVisitor<T> : IVisitor<T>
     {
         private readonly IBuilderContext _context;
         
-        public GenericVisitor(IBuilderContext context)
+        public AbstractVisitor(IBuilderContext context)
         {
             _context = context;
         }
 
-        public void Visit(Shape to)
+        public void Visit(T to)
         {
             Type concreteShapeType = to.GetType();
 

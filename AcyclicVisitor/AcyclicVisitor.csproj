@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data.cs" />
-    <Compile Include="GenericVisitor.cs" />
+    <Compile Include="AbstractVisitor.cs" />
     <Compile Include="IGraphics.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="ShapeExtensions.cs" />
