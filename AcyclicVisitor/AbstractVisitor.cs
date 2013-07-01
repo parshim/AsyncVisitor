@@ -4,7 +4,7 @@ using Microsoft.Practices.ObjectBuilder2;
 
 namespace AcyclicVisitor
 {
-    class AbstractVisitor<T> : IVisitor<T>
+    internal class AbstractVisitor<T> : IVisitor<T>
     {
         private readonly IBuilderContext _context;
         
