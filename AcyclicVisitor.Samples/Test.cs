@@ -3,7 +3,7 @@ using FakeItEasy;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AcyclicVisitor
+namespace AcyclicVisitor.Samples
 {
     [TestClass]
     public class TestAcyclicVisitior
