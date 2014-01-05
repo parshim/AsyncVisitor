@@ -1,5 +1,6 @@
 ﻿using System;
 using FakeItEasy;
+using FluentAssertions;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,8 +9,8 @@ namespace AcyclicVisitor.Samples
     [TestClass]
     public class TestAcyclicVisitior
     {
-        IUnityContainer _container;
-        IGraphics _graphics;
+        private IUnityContainer _container;
+        private IGraphics _graphics;
 
         [TestInitialize]
         public void TestInitialize()
@@ -17,7 +18,7 @@ namespace AcyclicVisitor.Samples
             _container = BuildContainer();
             _graphics = _container.Resolve<IGraphics>();
         }
-        
+
         private static IUnityContainer BuildContainer()
         {
             IUnityContainer container = new UnityContainer();
@@ -28,7 +29,9 @@ namespace AcyclicVisitor.Samples
                      .RegisterType<IVisitor<Canvas>, CanvasDrawVisitor>("Draw")
                      .RegisterType<IVisitor<Box>, BoxMagnifyVisitor>("Magnify")
                      .RegisterType<IVisitor<Circle>, CircleMagnifyVisitor>("Magnify")
-                     .RegisterType<IVisitor<Canvas>, CanvasMagnifyVisitor>("Magnify");
+                     .RegisterType<IVisitor<Canvas>, CanvasMagnifyVisitor>("Magnify")
+                     .RegisterType<IVisitor<Box>, BoxSquareVisitor>("Square")
+                     .RegisterType<IVisitor<Circle>, CircleSquareVisitor>("Square");
 
             container.AddNewExtension<VisitorContainerExtension<Shape>>();
 
@@ -41,17 +44,29 @@ namespace AcyclicVisitor.Samples
             _container.Dispose();
         }
 
-[TestMethod]
-public void TestDrawBox()
-{
-    Box b = new Box {Side = 5};
+        [TestMethod]
+        public void TestDrawBox()
+        {
+            Box b = new Box {Side = 5};
 
-    IVisitor<Shape> visitor = _container.Resolve<IVisitor<Shape>>("Draw");
+            IVisitor<Shape> visitor = _container.Resolve<IVisitor<Shape>>("Draw");
 
-    b.Accept(visitor);
+            b.Accept(visitor);
+
+            A.CallTo(() => _graphics.DrawBox(5)).MustHaveHappened();
+        }
+
+        [TestMethod]
+        public void TestComputeBoxSquere()
+        {
+            Box b = new Box {Side = 5};
+
+            IVisitor<Shape> visitor = _container.Resolve<IVisitor<Shape>>("Square");
+
+            double square = (double)b.Accept(visitor);
             
-    A.CallTo(() => _graphics.DrawBox(5)).MustHaveHappened();
-}
+            square.Should().Be(25);
+        }
 
         [TestMethod]
         public void TestDrawCanvas()
@@ -66,9 +81,9 @@ public void TestDrawBox()
             c.Add(new Circle {Radius = 12});
 
             IVisitor<Shape> visitor = _container.Resolve<IVisitor<Shape>>("Draw");
-            
+
             c.Accept(visitor);
-            
+
             A.CallTo(() => _graphics.DrawRectangle(10, 12)).MustHaveHappened();
             A.CallTo(() => _graphics.DrawBox(5)).MustHaveHappened();
             A.CallTo(() => _graphics.DrawCircle(12)).MustHaveHappened();
@@ -107,11 +122,11 @@ public void TestDrawBox()
 
                 Assert.Fail("Exception expected");
             }
-            catch(InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 // Expecting exception here for missing visitor implementation
             }
-            
+
             A.CallTo(() => _graphics.DrawRectangle(10, 12)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => _graphics.DrawBox(5)).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => _graphics.DrawCircle(0)).WithAnyArguments().MustNotHaveHappened();
@@ -121,14 +136,14 @@ public void TestDrawBox()
         public void TestDrawCanvasWithNewShapeWithCustomVisitor()
         {
             Canvas c = new Canvas
-            {
-                Height = 10,
-                Width = 12
-            };
+                {
+                    Height = 10,
+                    Width = 12
+                };
 
-            MyShape myShape = new MyShape { SomeData = 3 };
+            MyShape myShape = new MyShape {SomeData = 3};
 
-            c.Add(new Box { Side = 5 });
+            c.Add(new Box {Side = 5});
             c.Add(myShape);
 
             IVisitor<MyShape> customShapeVisitor = A.Fake<IVisitor<MyShape>>();

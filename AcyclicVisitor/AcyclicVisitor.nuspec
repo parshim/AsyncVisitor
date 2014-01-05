@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>AcyclicVisitor</id>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <authors>Michael Parshin</authors>
         <licenseUrl>http://www.codeproject.com/info/cpol10.aspx</licenseUrl>
         <projectUrl>http://michaelparshin.blogspot.co.il/2013/06/acyclic-visitor-implementation-without.html</projectUrl>
