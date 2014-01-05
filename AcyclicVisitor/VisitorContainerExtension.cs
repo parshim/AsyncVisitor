@@ -5,6 +5,11 @@ using Microsoft.Practices.Unity.ObjectBuilder;
 
 namespace AcyclicVisitor
 {
+    public class VisitorContainerExtension : VisitorContainerExtension<object>
+    {
+        
+    }
+
     public class VisitorContainerExtension<T> : UnityContainerExtension
     {
         protected override void Initialize()

@@ -1,4 +1,4 @@
-﻿namespace AcyclicVisitor
+﻿namespace AcyclicVisitor.Samples
 {
     class CircleDrawVisitor : IVisitor<Circle>
     {
@@ -9,9 +9,11 @@
             _graphics = graphics;
         }
 
-        public void Visit(Circle to)
+        public object Visit(Circle to)
         {
             _graphics.DrawCircle(to.Radius);
+
+            return null;
         }
 
         public void Dispose()
@@ -28,9 +30,11 @@
             _graphics = graphics;
         }
 
-        public void Visit(Box to)
+        public object Visit(Box to)
         {
             _graphics.DrawBox(to.Side);
+
+            return null;
         }
 
         public void Dispose()
@@ -49,7 +53,7 @@
             _graphics = graphics;
         }
 
-        public void Visit(Canvas to)
+        public object Visit(Canvas to)
         {
             _graphics.DrawRectangle(to.Height, to.Width);
 
@@ -57,6 +61,8 @@
             {
                 shape.Accept(_visitor);
             }
+
+            return null;
         }
 
         public void Dispose()

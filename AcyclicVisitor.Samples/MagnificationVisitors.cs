@@ -1,4 +1,4 @@
-﻿namespace AcyclicVisitor
+﻿namespace AcyclicVisitor.Samples
 {
     class CircleMagnifyVisitor : IVisitor<Circle>
     {
@@ -9,9 +9,11 @@
             _ratio = ratio;
         }
 
-        public void Visit(Circle to)
+        public object Visit(Circle to)
         {
             to.Radius *= _ratio;
+
+            return null;
         }
 
         public void Dispose()
@@ -28,9 +30,11 @@
             _ratio = ratio;
         }
         
-        public void Visit(Box to)
+        public object Visit(Box to)
         {
             to.Side *= _ratio;
+
+            return null;
         }
 
         public void Dispose()
@@ -49,7 +53,7 @@
             _visitor = visitor;
         }
 
-        public void Visit(Canvas to)
+        public object Visit(Canvas to)
         {
             to.Height *= _ratio;
             to.Width *= _ratio;
@@ -58,6 +62,8 @@
             {
                 shape.Accept(_visitor);
             }
+
+            return null;
         }
 
         public void Dispose()

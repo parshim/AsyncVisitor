@@ -13,7 +13,7 @@ namespace AcyclicVisitor
             _context = context;
         }
 
-        public void Visit(T to)
+        public object Visit(T to)
         {
             Type concreteShapeType = to.GetType();
 
@@ -25,13 +25,12 @@ namespace AcyclicVisitor
             try
             {
                 // Invoke
-                concreteVisitorType.InvokeMember("Visit", BindingFlags.InvokeMethod, null, concreteVisitor, new object[] { to });
+                return concreteVisitorType.InvokeMember("Visit", BindingFlags.InvokeMethod, null, concreteVisitor, new object[] { to });
             }
             catch(TargetInvocationException ex)
             {
                 throw ex.InnerException;
             }
-           
         }
 
         public void Dispose()

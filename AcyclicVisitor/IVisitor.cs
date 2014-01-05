@@ -2,6 +2,6 @@
 {
     public interface IVisitor<in T>
     {
-        void Visit(T to);
+        object Visit(T to);
     }
 }
