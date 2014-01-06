@@ -4,7 +4,7 @@ using Microsoft.Practices.ObjectBuilder2;
 
 namespace AcyclicVisitor
 {
-    internal class AbstractVisitor<T> : IVisitor<T>
+    internal class AbstractVisitor : IVisitor<object>
     {
         private readonly IBuilderContext _context;
         
@@ -13,19 +13,24 @@ namespace AcyclicVisitor
             _context = context;
         }
 
-        public object Visit(T to)
+        public object Visit(object to)
         {
-            Type concreteShapeType = to.GetType();
+            Type visiteeType = to.GetType();
 
             // Construct generic visitor type for concrete shape type
-            Type concreteVisitorType = typeof(IVisitor<>).MakeGenericType(concreteShapeType);
+            Type concreteVisitorType = typeof(IVisitor<>).MakeGenericType(visiteeType);
 
             object concreteVisitor = _context.NewBuildUp(new NamedTypeBuildKey(concreteVisitorType, _context.BuildKey.Name));
+
+            if (concreteVisitor.GetType() == typeof (AbstractVisitor))
+            {
+                throw new InvalidOperationException(string.Format("Failed to resolve vistor  for {0}", visiteeType));
+            }
 
             try
             {
                 // Invoke
-                return concreteVisitorType.InvokeMember("Visit", BindingFlags.InvokeMethod, null, concreteVisitor, new object[] { to });
+                return concreteVisitorType.InvokeMember("Visit", BindingFlags.InvokeMethod, null, concreteVisitor, new[] { to });
             }
             catch(TargetInvocationException ex)
             {

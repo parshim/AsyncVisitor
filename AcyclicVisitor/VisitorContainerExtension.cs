@@ -5,27 +5,23 @@ using Microsoft.Practices.Unity.ObjectBuilder;
 
 namespace AcyclicVisitor
 {
-    public class VisitorContainerExtension : VisitorContainerExtension<object>
-    {
-        
-    }
-
-    public class VisitorContainerExtension<T> : UnityContainerExtension
+    public class VisitorContainerExtension : UnityContainerExtension
     {
         protected override void Initialize()
         {
-            Context.Strategies.AddNew<VisitorBuilderStrategy<T>>(UnityBuildStage.PreCreation);
+            Context.Strategies.AddNew<VisitorBuilderStrategy>(UnityBuildStage.PreCreation);
         }
     }
 
-    internal class VisitorBuilderStrategy<T> : BuilderStrategy
+    internal class VisitorBuilderStrategy : BuilderStrategy
     {
         public override void PreBuildUp(IBuilderContext context)
         {
             Type typeToBuild = context.BuildKey.Type;
-            if (typeToBuild.IsGenericType && typeof (IVisitor<>).MakeGenericType(typeof(T)) == typeToBuild)
+
+            if (typeToBuild.IsGenericType && typeof (IVisitor<>) == typeToBuild.GetGenericTypeDefinition())
             {
-                AbstractVisitor<T> abstractVisitor = new AbstractVisitor<T>(context);
+                AbstractVisitor abstractVisitor = new AbstractVisitor(context);
 
                 context.Existing = abstractVisitor;
 

@@ -33,7 +33,7 @@ namespace AcyclicVisitor.Samples
                      .RegisterType<IVisitor<Box>, BoxSquareVisitor>("Square")
                      .RegisterType<IVisitor<Circle>, CircleSquareVisitor>("Square");
 
-            container.AddNewExtension<VisitorContainerExtension<Shape>>();
+            container.AddNewExtension<VisitorContainerExtension>();
 
             return container;
         }
@@ -50,6 +50,18 @@ namespace AcyclicVisitor.Samples
             Box b = new Box {Side = 5};
 
             IVisitor<Shape> visitor = _container.Resolve<IVisitor<Shape>>("Draw");
+
+            b.Accept(visitor);
+
+            A.CallTo(() => _graphics.DrawBox(5)).MustHaveHappened();
+        }
+
+        [TestMethod]
+        public void TestDrawBoxWithConcreteVisitor()
+        {
+            Box b = new Box { Side = 5 };
+
+            IVisitor<Box> visitor = _container.Resolve<IVisitor<Box>>("Draw");
 
             b.Accept(visitor);
 
